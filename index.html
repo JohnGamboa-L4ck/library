@@ -1,15 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
     <head>
-        <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <link rel="icon" href="data:;base64,=">
-        <link rel="stylesheet" href="styles.css">
+        <meta charset = "utf-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+        <meta http-equiv = "X-UA-Compatible" content = "ie=edge">
+        <link rel = "icon" href = "data:;base64,=">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" 
+            rel="stylesheet">
+        <link rel = "stylesheet" href = "styles.css">
         <title>Library</title>
     </head>
     <body>
-
+        <div class = "container" id = "container-title">
+            <h1>Library</h1>
+        </div>
+        <div class = "container" id = "container-info">
+            <ul>
+                <li id = "book-count-label"></li>
+                <li>Completed: </li>
+                <li>Reading: </li>
+                <li>To Be Read:</li>
+                <li id = "li-btn-holder"><button id = "btn-newBook">
+                    <span class="material-icons-outlined middle">add</span> New Book</button></li>
+            </ul>
+        </div>
+        <div class = "container hidden" id = "container-form">
+            <form>
+                <h3>Add New Book</h3>
+                <div>
+                    <label for = "input-title">Title</label><br>
+                    <input type = "text" id = "input-title" autocomplete = "off" required>
+                </div>
+                <div>
+                    <label for = "input-author">Author</label><br>
+                    <input type = "text" id = "input-author" autocomplete = "off" required>
+                </div>
+                <div>
+                    <label for = "input-pages">Number of Pages</label><br>
+                    <input type = "number" id = "input-pages" autocomplete = "off" min = "1" required>
+                </div>
+                <div id = "status-container">
+                    <label>Status</label><br>
+                        <input type = "radio" name = "status" value = "Completed" 
+                            id = "stat-complete">
+                        <label for = "status-complete">Completed</label><br>
+                        <input type = "radio" name = "status" value = "To Be Read" 
+                            id = "status-tbr">
+                        <label for = "status-tbr">To Be Read</label><br>
+                        <input type = "radio" name = "status" value = "Reading" 
+                            id = "status-reading">
+                        <label for = "status-reading">Reading</label>
+                            <div id = "reading-page-container" class = "hidden">
+                                <label>Page Number</label>
+                                <input type = "number" min = "1" id = "reading-page" 
+                                    autocomplete = "off">
+                            </div>
+                </div> 
+                <div id = "form-buttons">
+                    <button type = "submit" id = "btn-submit">
+                        <span class="material-icons-outlined middle">done</span>Submit
+                    </button>
+                    <button type = "reset" id = "btn-reset">
+                        <span class="material-icons-outlined middle">restart_alt</span>Reset
+                    </button>
+                    <button type = "button" id = "btn-cancel">
+                        <span class="material-icons-outlined middle">cancel</span>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class = "container" id = "container-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th id = "firstTh">Title</th>
+                        <th>Author</th>
+                        <th>Pages</th>
+                        <th>Status</th>
+                        <th id = "lastTh">manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class = "tr-book">
+                        <td>L4ck's guide to beat the God Gamer</td>
+                        <td>John Gamboa</td>
+                        <td id = "pages">269</td>
+                        <td id = "status">Reading: p.219</td>
+                        <td id = "manage">
+                            <button id = "edit">
+                                <span class="material-icons-outlined middle">
+                                    edit</span>
+                            </button>
+                            <button  id = "delete">
+                                <span class="material-icons-outlined middle">
+                                    delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer>
+            <p>
+                Built by: 
+                <a href = "https://github.com/JohnGamboa-L4ck" target = "blank">L4ck</a>
+                View
+                <a href = "https://github.com/JohnGamboa-L4ck/library" target = "blank">
+                    Source Code</a>
+            </p>
+        </footer>
     </body>
     <script src="script.js"></script>
 </html>
+<!-- give book id? -->
