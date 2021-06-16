@@ -20,8 +20,16 @@
                 <li>Completed: </li>
                 <li>Reading: </li>
                 <li>To Be Read:</li>
-                <li id = "li-btn-holder"><button id = "btn-newBook">
-                    <span class="material-icons-outlined middle">add</span> New Book</button></li>
+                <li>
+                    <button id = "btn-newBook" class = "li-btn">
+                        <span class="material-icons-outlined middle">add</span> New Book
+                    </button>
+                </li>
+                <li id = "clearAll-container" class = "hidden">
+                    <button id = "btn-emptyLibrary" class = "li-btn">
+                        <span class="material-icons-outlined middle">local_fire_department</span> Clear All
+                    </button>
+                </li>
             </ul>
         </div>
         <div class = "container hidden" id = "container-form">
@@ -29,20 +37,23 @@
                 <h3>Add New Book</h3>
                 <div>
                     <label for = "input-title">Title</label><br>
-                    <input type = "text" id = "input-title" autocomplete = "off" required>
+                    <input type = "text" id = "input-title" autocomplete = "off" 
+                        name = "title" required>
                 </div>
                 <div>
                     <label for = "input-author">Author</label><br>
-                    <input type = "text" id = "input-author" autocomplete = "off" required>
+                    <input type = "text" id = "input-author" autocomplete = "off" 
+                        name = "author" required>
                 </div>
                 <div>
                     <label for = "input-pages">Number of Pages</label><br>
-                    <input type = "number" id = "input-pages" autocomplete = "off" min = "1" required>
+                    <input type = "number" id = "input-pages" autocomplete = "off" min = "1" 
+                        name = "pages" required>
                 </div>
                 <div id = "status-container">
                     <label>Status</label><br>
                         <input type = "radio" name = "status" value = "Completed" 
-                            id = "stat-complete">
+                            id = "stat-complete" required>
                         <label for = "status-complete">Completed</label><br>
                         <input type = "radio" name = "status" value = "To Be Read" 
                             id = "status-tbr">
@@ -53,7 +64,7 @@
                             <div id = "reading-page-container" class = "hidden">
                                 <label>Page Number</label>
                                 <input type = "number" min = "1" id = "reading-page" 
-                                    autocomplete = "off">
+                                    name = "bookmark" autocomplete = "off" required>
                             </div>
                 </div> 
                 <div id = "form-buttons">
@@ -77,26 +88,10 @@
                         <th>Author</th>
                         <th>Pages</th>
                         <th>Status</th>
-                        <th id = "lastTh">manage</th>
+                        <th id = "lastTh" tabindex = "0">manage</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class = "tr-book">
-                        <td>L4ck's guide to beat the God Gamer</td>
-                        <td>John Gamboa</td>
-                        <td id = "pages">269</td>
-                        <td id = "status">Reading: p.219</td>
-                        <td id = "manage">
-                            <button id = "edit">
-                                <span class="material-icons-outlined middle">
-                                    edit</span>
-                            </button>
-                            <button  id = "delete">
-                                <span class="material-icons-outlined middle">
-                                    delete</span>
-                            </button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>

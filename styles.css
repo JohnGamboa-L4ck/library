@@ -65,7 +65,7 @@ body {
     font-weight: bold;
 }
 
-#btn-newBook {
+.li-btn {
     width: 100%;
     height: 100%;
     padding: .3rem;
@@ -73,13 +73,22 @@ body {
     font-weight: bold;
 }
 
-#btn-newBook:hover, #btn-newBook:focus-visible {
+.li-btn:hover, .li-btn:focus-visible {
     background-color: var(--tertiary);
-    color: white;
+    color: var(--light);
     box-shadow: 0 0 3px 2px var(--primary);
     letter-spacing: .25rem;
     text-transform: uppercase;
     transition: .25s;
+}
+
+#btn-emptyLibrary {
+    color: var(--red);
+}
+
+#btn-emptyLibrary:hover, #btn-emptyLibrary:focus-visible {
+    background-color: var(--red);
+    color: var(--light);
 }
 
 #container-form {
@@ -196,13 +205,23 @@ th:hover {
     background-color: white;
 }
 
+.tr-book:hover td {
+    text-decoration: underline;
+    height: 2.5rem;
+}
+
 td {
     padding: .2rem .3rem;
     border: 1px solid var(--light);   
 }
 
-#pages, #status, #manage {
+.pages, .status, .manage {
     text-align: center;
+}
+
+#lastTh:hover, #lastTh:focus-visible {
+    cursor: pointer;
+    color: var(--red);
 }
 
 button {
@@ -217,13 +236,17 @@ button {
     vertical-align: middle;
 }
 
-#edit:hover, #edit:focus-visible {
+.edit{
+    margin-right: 1rem;
+}
+
+.edit:hover, .edit:focus-visible {
     background-color: var(--green);
     color: var(--light);
     box-shadow: 0 0 3px 2px var(--primary);
 }
 
-#delete:hover, #delete:focus-visible {
+.delete:hover, .delete:focus-visible {
     background-color: var(--red);
     color: var(--light);
     box-shadow: 0 0 3px 2px var(--primary);
