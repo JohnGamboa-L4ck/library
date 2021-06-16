@@ -16,7 +16,6 @@ const bookLabelEditor = function(){
         liBookLabel.innerText = `Books: ${bookCount}`;
     }
 }
-bookLabelEditor();
 
 const inputRadioStatus = document.querySelectorAll('input[name="status"]');
 
@@ -65,7 +64,8 @@ const toggleClearAllBtnVisibility = function() {
 const clearAllBooks = function(){
     const confirmClear = confirm('Clear all book records? Click "OK" to proceed.');
     if(confirmClear){
-        localStorage.setItem('library', JSON.stringify([]));}
+        localStorage.setItem('library', JSON.stringify([]));
+        updateTable(); }
     else{ return; }   
 };
 
@@ -83,7 +83,8 @@ const book = {
         if(confirmDelete){
             bookLibrary.splice(this.index, 1);
             localStorage.setItem('library', JSON.stringify(bookLibrary));
-            updateTable(); }
+            updateTable();
+            displayBlocker(); }
         else{ return; }
     }
 };
@@ -98,13 +99,21 @@ const submitHandler = function(event){
         { ...acc, [input.name]: input.value }),{});
 
     if(radio.value != 'Reading') result.status = radio.value;
-    if(radio.value === "Reading" && result.bookmark) result.status = `Reading p.${result.bookmark}`;
+    if(radio.value === "Reading" && result.bookmark){
+        if(Number(result.bookmark) >= Number(result.pages)){
+            const message = document.querySelector('#error-msg');
+            message.classList.toggle('hidden');
+            setTimeout(() => message.classList.toggle('hidden'), 2000);
+            return;
+        }
+        result.status = `Reading p.${result.bookmark}`;
+    }
 
     delete result.bookmark;
     document.querySelector('form').reset();
 
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
-    const newBook = Object.create(book); //might not be needed here
+    const newBook = {};
 
     newBook.title = result.title;
     newBook.author = result.author;
@@ -113,6 +122,10 @@ const submitHandler = function(event){
     
     bookLibrary.push(newBook);
     localStorage.setItem('library', JSON.stringify(bookLibrary));
+    const message = document.querySelector('#success-msg');
+    message.classList.toggle('hidden');
+    setTimeout(() => message.classList.toggle('hidden'), 1500);
+    displayBlocker();
     updateTable();
 };
 
@@ -175,5 +188,21 @@ const updateTable = function(){
         btnEdit.onclick = () => bookLibrary[index].edit();
         btnDelete.onclick = () => bookLibrary[index].delete();
     }
+    bookLabelEditor();
 };
 updateTable();
+
+const displayBlocker = function(){
+    let bookLibrary = JSON.parse(localStorage.getItem('library'));
+    let divTable = document.querySelector('#container-table');
+    if(bookLibrary.length === 0){
+        divContainerForm.classList.remove('hidden');
+        divContainerInfo.classList.add('hidden');
+        divTable.classList.add('hidden'); } 
+    else {
+        // divContainerForm.classList.add('hidden');
+        // divContainerInfo.classList.remove('hidden');
+        divTable.classList.remove('hidden');
+    }
+};
+displayBlocker();

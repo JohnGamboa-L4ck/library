@@ -35,6 +35,12 @@
         <div class = "container hidden" id = "container-form">
             <form>
                 <h3>Add New Book</h3>
+                <div id = "success-msg" class = "hidden">
+                    <h3>Book Added!</h3>
+                </div>
+                <div id = "error-msg" class = "hidden">
+                    <h3>Error: Number of Pages should be higher than Reading Page!</h3>
+                </div>
                 <div>
                     <label for = "input-title">Title</label><br>
                     <input type = "text" id = "input-title" autocomplete = "off" 
@@ -47,7 +53,7 @@
                 </div>
                 <div>
                     <label for = "input-pages">Number of Pages</label><br>
-                    <input type = "number" id = "input-pages" autocomplete = "off" min = "1" 
+                    <input type = "number" id = "input-pages" autocomplete = "off" min = "1" max = "1500"
                         name = "pages" required>
                 </div>
                 <div id = "status-container">
@@ -63,8 +69,8 @@
                         <label for = "status-reading">Reading</label>
                             <div id = "reading-page-container" class = "hidden">
                                 <label>Page Number</label>
-                                <input type = "number" min = "1" id = "reading-page" 
-                                    name = "bookmark" autocomplete = "off" required>
+                                <input type = "number" min = "1" max = "1500" id = "reading-page" 
+                                    name = "bookmark" autocomplete = "off">
                             </div>
                 </div> 
                 <div id = "form-buttons">
@@ -75,7 +81,7 @@
                         <span class="material-icons-outlined middle">restart_alt</span>Reset
                     </button>
                     <button type = "button" id = "btn-cancel">
-                        <span class="material-icons-outlined middle">cancel</span>Cancel
+                        <span class="material-icons-outlined middle">cancel</span>Close
                     </button>
                 </div>
             </form>
