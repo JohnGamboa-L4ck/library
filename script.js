@@ -119,29 +119,50 @@ const book = {
     }
 };
 
-const submitHandler = function(event){
-    event.preventDefault();
+const showError = function(text){
+    const message = document.querySelector('#error-msg');
+    const h3 = document.querySelector('#error-msg h3');
+    h3.innerText = text;
+    message.classList.toggle('hidden');
+    setTimeout(() => message.classList.toggle('hidden'), 2000);
+}
 
+const getData = function(){
     let formInput = document.querySelectorAll('form input');
     const radio = document.querySelector('input[name="status"]:checked');
-
     let result = Array.from(formInput).reduce((acc, input) => (
         { ...acc, [input.name]: input.value }),{});
 
+    if((!result.title || !result.author) || (Number(result.pages) < 1
+        || (radio.value === 'Reading' && result.bookmark == ''))){
+        showError('Error: Missing Data Input!');
+        return;
+    }
+
     if(radio.value != 'Reading') result.status = radio.value;
-    if(radio.value === "Reading" && result.bookmark){
+    if(radio.value === 'Reading' && result.bookmark){
         if(Number(result.bookmark) >= Number(result.pages)){
-            const message = document.querySelector('#error-msg');
-            message.classList.toggle('hidden');
-            setTimeout(() => message.classList.toggle('hidden'), 2000);
+            showError('Error: Number of Pages should be higher than Reading Page!');
             return;
         }
         result.status = `Reading p.${result.bookmark}`;
     }
-
     delete result.bookmark;
-    document.querySelector('form').reset();
+    if(localStorage.getItem('index') == ''){
+        const message = document.querySelector('#success-msg');
+        message.classList.toggle('hidden');
+        setTimeout(() => message.classList.toggle('hidden'), 1500);
+    }
+    return result;
+}
 
+const submitHandler = function(event){
+    event.preventDefault();
+
+    let result = getData();
+    if(!result){ return; }
+    
+    document.querySelector('form').reset();
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
     const newBook = {};
 
@@ -154,23 +175,21 @@ const submitHandler = function(event){
     localStorage.setItem('library', JSON.stringify(bookLibrary));
     const readingPageContainer = document.querySelector('#reading-page-container');
     readingPageContainer.classList.add('hidden');
-    const message = document.querySelector('#success-msg');
-    message.classList.toggle('hidden');
-    setTimeout(() => message.classList.toggle('hidden'), 1500);
     displayBlocker();
     updateTable();
 };
 
 document.addEventListener('submit', submitHandler);
 
-const setValue = function(index){ 
+const setValue = function(index){
+    //change the value of index if the function parameter recieved an event argument
     if(typeof index != "number"){ index = localStorage.getItem('index'); }
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
     let book = bookLibrary[index];
     const inputTitle = document.querySelector('#input-title');
     const inputAuthor = document.querySelector('#input-author');
     const inputPages = document.querySelector('#input-pages');
-    // const radio = document.querySelector('input[name="status"]:checked');
+
     const statusComplete = document.querySelector('#status-complete');
     const statusTbr = document.querySelector('#status-tbr');
     const statusReading = document.querySelector('#status-reading');
@@ -224,20 +243,27 @@ const showBookEditor = function(index) {
     changeFormIntoEditor();
     setValue(index);
     localStorage.setItem('index', index);
-    // console.log(localStorage.getItem('index'));
-    // let x = localStorage.getItem('index');
-    // console.log(typeof x);
 };
 
+const editBook = function(){
+    let result = getData();
+    if(!result) { return; }
+
+    let bookLibrary = JSON.parse(localStorage.getItem('library'));
+    bookLibrary[localStorage.getItem('index')] = result;
+    localStorage.setItem('library', JSON.stringify(bookLibrary));
+    localStorage.setItem('index', '');
+    changeEditorIntoForm();
+    updateTable();
+}
+
+const btnSaveEdit = document.querySelector('#btn-save-edit');
+btnSaveEdit.addEventListener('click', editBook);
 const btnResetValue = document.querySelector('#btn-reset-value');
 btnResetValue.addEventListener('click', setValue);
 const btnCancelEdit = document.querySelector('#btn-cancel-edit');
 btnCancelEdit.addEventListener('click', changeEditorIntoForm);
 
-// let bookLibrary = JSON.parse(localStorage.getItem('library'));
-// Object.setPrototypeOf(bookLibrary[0], book);
-//index or id inside the objects?
-//fix info's, they shouldn't be seen if the button close is hit while the library is empty
 //should I group all the addEventListener and clickable node/btn down below?
 
 const updateTable = function(){
