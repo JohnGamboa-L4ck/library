@@ -17,9 +17,9 @@
         <div class = "container" id = "container-info">
             <ul>
                 <li id = "book-count-label"></li>
-                <li>Completed: </li>
-                <li>Reading: </li>
-                <li>To Be Read:</li>
+                <li id = "book-reading">Reading: </li>
+                <li id = "book-tbr">To Be Read:</li>
+                <li id = "book-completed">Completed: </li>
                 <li>
                     <button id = "btn-newBook" class = "li-btn">
                         <span class="material-icons-outlined middle">add</span> New Book
@@ -59,7 +59,7 @@
                 <div id = "status-container">
                     <label>Status</label><br>
                         <input type = "radio" name = "status" value = "Completed" 
-                            id = "stat-complete" required>
+                            id = "status-complete" required>
                         <label for = "status-complete">Completed</label><br>
                         <input type = "radio" name = "status" value = "To Be Read" 
                             id = "status-tbr">
@@ -80,8 +80,19 @@
                     <button type = "reset" id = "btn-reset">
                         <span class="material-icons-outlined middle">restart_alt</span>Reset
                     </button>
-                    <button type = "button" id = "btn-cancel">
-                        <span class="material-icons-outlined middle">cancel</span>Close
+                    <button type = "button" id = "btn-close">
+                        <span class="material-icons-outlined middle">close</span>Close
+                    </button>
+                </div>
+                <div id = "book-editor-buttons" class = "hidden">
+                    <button id = "btn-save-edit" type = "button">
+                        <span class="material-icons-outlined middle">save</span>Save
+                    </button>
+                    <button id = "btn-reset-value" type = "button">
+                        <span class="material-icons-outlined middle">restart_alt</span>Reset
+                    </button>
+                    <button id = "btn-cancel-edit" type = "button">
+                        <span class="material-icons-outlined middle">cancel</span>Cancel
                     </button>
                 </div>
             </form>
@@ -113,4 +124,3 @@
     </body>
     <script src="script.js"></script>
 </html>
-<!-- give book id? -->

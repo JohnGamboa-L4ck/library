@@ -141,17 +141,18 @@ input[type=text]:focus, input[type=number]:focus {
     margin-right: 0!important;
 }
 
-#form-buttons {
+#form-buttons, #book-editor-buttons {
     display: flex;
     justify-content: space-between;
 }
 
-#form-buttons button {
+#form-buttons button, #book-editor-buttons button {
     width: 25%;
     height: 1.7rem;
 }
 
-#form-buttons button:hover, #form-buttons button:focus-visible {
+#form-buttons button:hover, #form-buttons button:focus-visible,
+#book-editor-buttons button:hover, #book-editor-buttons button:focus-visible {
     color: var(--light);
     box-shadow: 0 0 3px 2px var(--light);
 }
@@ -164,12 +165,15 @@ div label {
     line-height: 1.5rem;
 }
 
-#btn-submit:hover, #btn-submit:focus-visible {
+#btn-submit:hover, #btn-submit:focus-visible,
+#btn-save-edit:hover, #btn-save-edit:focus-visible {
     background-color: var(--green);
 }
 
 #btn-reset:hover, #btn-reset:focus-visible,
-#btn-cancel:hover, #btn-cancel:focus-visible {
+#btn-close:hover, #btn-close:focus-visible,
+#btn-reset-value:hover, #btn-reset-value:focus-visible,
+#btn-cancel-edit:hover, #btn-cancel-edit:focus-visible {
     background-color: var(--red);
 }
 

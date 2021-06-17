@@ -1,5 +1,6 @@
 "use strict";
 const checkLibrary = function(){
+    localStorage.setItem('index', '');
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
     if(!bookLibrary) localStorage.setItem('library', JSON.stringify([]));
 };
@@ -10,20 +11,37 @@ const bookLabelEditor = function(){
     const trTable = document.querySelectorAll('tr');
     let bookCount = trTable.length-1;
 
-    if(bookCount <= 1){
-        liBookLabel.innerText = `Book: ${bookCount}`;
-    } else {
-        liBookLabel.innerText = `Books: ${bookCount}`;
+    if(bookCount <= 1){ liBookLabel.innerText = `Book: ${bookCount}`; } 
+    else { liBookLabel.innerText = `Books: ${bookCount}`; }
+
+    let bookLibrary = JSON.parse(localStorage.getItem('library'));
+    bookCount = bookLibrary.length;
+    let completed = 0;
+    let tbr = 0;
+    let reading = 0;
+
+    for(let index = 0; index < bookCount; index++){
+        if (bookLibrary[index].status === 'Completed'){ completed++; }
+        else if (bookLibrary[index].status === 'To Be Read'){ tbr++; }
+        else { reading++; }
     }
+
+    const liBookReading = document.querySelector('#book-reading');
+    const liBookTbr = document.querySelector('#book-tbr');
+    const liBookCompleted = document.querySelector('#book-completed');
+
+    liBookReading.innerText = `Reading: ${reading}`;
+    liBookTbr.innerText = `To Be Read: ${tbr}`;
+    liBookCompleted.innerText = `Completed: ${completed}`;
 }
 
 const inputRadioStatus = document.querySelectorAll('input[name="status"]');
+const inputReadingPageContainer = document.querySelector('#reading-page-container');
 
 const checkIfReading = function(e){
-    const inputReadingPageContainer = document.querySelector('#reading-page-container');
     const inputReadingPage = document.querySelector('#reading-page');
     if(e.target.value == 'Reading'){
-        inputReadingPageContainer.classList.remove('hidden');
+        inputReadingPageContainer.removeAttribute('class');//changed 21:33 june 17
         inputReadingPage.setAttribute('required', 'true') } 
     else { 
         inputReadingPageContainer.classList.add('hidden'); 
@@ -31,41 +49,54 @@ const checkIfReading = function(e){
     }
 }
 
+const hideReadingPageContainer = function(){
+    if(!inputReadingPageContainer.classList.contains('hidden')){
+        inputReadingPageContainer.classList.add('hidden');
+    }
+};
+
 inputRadioStatus.forEach(function(input){
     input.addEventListener('change', checkIfReading);
 });
 
 const btnNewBook = document.querySelector('#btn-newBook');
-const btnCancel = document.querySelector('#btn-cancel');
+const btnReset = document.querySelector('#btn-reset');
+const btnCancel = document.querySelector('#btn-close');
 const divContainerInfo = document.querySelector('#container-info');
 const divContainerForm = document.querySelector('#container-form');
+const divTable = document.querySelector('#container-table');
 
-const showForm = function(){
+const displayNewBookForm = function(){
     divContainerInfo.classList.add('hidden');
     divContainerForm.classList.remove('hidden');
+    divTable.classList.add('hidden');
 };
 
-const hideForm = function(){
+const hideNewBookForm = function(){
     divContainerInfo.classList.remove('hidden');
     divContainerForm.classList.add('hidden');
+    divTable.classList.remove('hidden');
 };
 
-btnNewBook.addEventListener('click', showForm);
-btnCancel.addEventListener('click', hideForm);
+btnNewBook.addEventListener('click', displayNewBookForm);
+btnReset.addEventListener('click', hideReadingPageContainer);
+btnCancel.addEventListener('click', hideNewBookForm);
 
 const headerLastTh = document.querySelector('#lastTh');
 const liClearAllContainer = document.querySelector('#clearAll-container');
 const btnEmptyLibrary = document.querySelector('#btn-emptyLibrary');
 
 const toggleClearAllBtnVisibility = function() {
-    liClearAllContainer.classList.toggle('hidden');
+    liClearAllContainer.classList.remove('hidden')
+    setTimeout(() => liClearAllContainer.classList.add('hidden'), 3000);
 }
 
 const clearAllBooks = function(){
     const confirmClear = confirm('Clear all book records? Click "OK" to proceed.');
     if(confirmClear){
         localStorage.setItem('library', JSON.stringify([]));
-        updateTable(); }
+        // updateTable(); 
+        displayBlocker(); }
     else{ return; }   
 };
 
@@ -74,8 +105,7 @@ btnEmptyLibrary.addEventListener('click', clearAllBooks);
 
 const book = {
     edit: function() {
-        // let bookLibrary = JSON.parse(localStorage.getItem('library'));
-        console.log(this.index);
+        showBookEditor(this.index);
     },
     delete: function() {
         let bookLibrary = JSON.parse(localStorage.getItem('library'));
@@ -122,6 +152,8 @@ const submitHandler = function(event){
     
     bookLibrary.push(newBook);
     localStorage.setItem('library', JSON.stringify(bookLibrary));
+    const readingPageContainer = document.querySelector('#reading-page-container');
+    readingPageContainer.classList.add('hidden');
     const message = document.querySelector('#success-msg');
     message.classList.toggle('hidden');
     setTimeout(() => message.classList.toggle('hidden'), 1500);
@@ -129,12 +161,84 @@ const submitHandler = function(event){
     updateTable();
 };
 
+document.addEventListener('submit', submitHandler);
+
+const setValue = function(index){ 
+    if(typeof index != "number"){ index = localStorage.getItem('index'); }
+    let bookLibrary = JSON.parse(localStorage.getItem('library'));
+    let book = bookLibrary[index];
+    const inputTitle = document.querySelector('#input-title');
+    const inputAuthor = document.querySelector('#input-author');
+    const inputPages = document.querySelector('#input-pages');
+    // const radio = document.querySelector('input[name="status"]:checked');
+    const statusComplete = document.querySelector('#status-complete');
+    const statusTbr = document.querySelector('#status-tbr');
+    const statusReading = document.querySelector('#status-reading');
+    const readingPageContainer = document.querySelector('#reading-page-container');
+    const readingPage = document.querySelector('#reading-page');
+
+    inputTitle.value = book.title;
+    inputAuthor.value = book.author;
+    inputPages.value = book.pages;
+
+    if(book.status == 'Completed'){ statusComplete.checked = 'true'; } 
+    else if (book.status == 'To Be Read'){ statusTbr.checked = 'true'; } 
+    else { statusReading.checked = 'true';
+        readingPageContainer.classList.remove('hidden');
+        readingPage.value = book.status.replace( /^\D+/g, '');
+    }
+};
+
+const form = document.querySelector('form');
+const formH3 = document.querySelector('form h3');
+const formButtons = document.querySelector('#form-buttons');
+const editorButtons = document.querySelector('#book-editor-buttons');
+
+const toggleDisplay = function(){
+    divContainerForm.classList.toggle('hidden');
+    divTable.classList.toggle('hidden');
+    divContainerInfo.classList.toggle('hidden');
+};
+
+const changeFormIntoEditor = function(){
+    form.setAttribute('style', 'background-color: var(--green); color: var(--primary);');
+    formH3.classList.toggle('hidden');
+    formButtons.classList.toggle('hidden');
+    editorButtons.removeAttribute('class');
+};
+
+const changeEditorIntoForm = function(){
+    // const inputReadingPageContainer = document.querySelector('#reading-page-container');
+    form.removeAttribute('style');
+    formH3.classList.toggle('hidden');
+    formButtons.classList.toggle('hidden');
+    editorButtons.classList.add('hidden');
+    inputReadingPageContainer.classList.add('hidden');
+    document.querySelector('form').reset();
+    localStorage.setItem('index', '');
+    toggleDisplay();
+};
+
+const showBookEditor = function(index) {
+    toggleDisplay();
+    changeFormIntoEditor();
+    setValue(index);
+    localStorage.setItem('index', index);
+    // console.log(localStorage.getItem('index'));
+    // let x = localStorage.getItem('index');
+    // console.log(typeof x);
+};
+
+const btnResetValue = document.querySelector('#btn-reset-value');
+btnResetValue.addEventListener('click', setValue);
+const btnCancelEdit = document.querySelector('#btn-cancel-edit');
+btnCancelEdit.addEventListener('click', changeEditorIntoForm);
+
 // let bookLibrary = JSON.parse(localStorage.getItem('library'));
 // Object.setPrototypeOf(bookLibrary[0], book);
 //index or id inside the objects?
-//reading pages shouldn't be higher than the number of pages
-
-document.addEventListener('submit', submitHandler);
+//fix info's, they shouldn't be seen if the button close is hit while the library is empty
+//should I group all the addEventListener and clickable node/btn down below?
 
 const updateTable = function(){
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
@@ -195,14 +299,22 @@ updateTable();
 const displayBlocker = function(){
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
     let divTable = document.querySelector('#container-table');
+    const formButtons = document.querySelector('#form-buttons');
+
     if(bookLibrary.length === 0){
         divContainerForm.classList.remove('hidden');
         divContainerInfo.classList.add('hidden');
+        btnCancel.classList.add('hidden');
+        formButtons.setAttribute('style', 'justify-content: space-evenly;');
         divTable.classList.add('hidden'); } 
     else {
         // divContainerForm.classList.add('hidden');
         // divContainerInfo.classList.remove('hidden');
-        divTable.classList.remove('hidden');
+        if(btnCancel.classList.contains('hidden')){
+            btnCancel.classList.remove('hidden');
+            formButtons.removeAttribute('style');
+        }
+        // divTable.classList.remove('hidden');
     }
 };
 displayBlocker();
