@@ -1,10 +1,35 @@
 "use strict";
+const btnMenu = document.querySelector('#menu');
+const btnCloseMenu = document.querySelector('#close-menu');
+const footer = document.querySelector('footer');
+const inputRadioStatus = document.querySelectorAll('input[name="status"]');
+const inputReadingPageContainer = document.querySelector('#reading-page-container');
+
+const btnNewBook = document.querySelector('#btn-newBook');
+const btnReset = document.querySelector('#btn-reset');
+const btnCancel = document.querySelector('#btn-close');
+const divContainerInfo = document.querySelector('#container-info');
+const divContainerForm = document.querySelector('#container-form');
+const divTable = document.querySelector('#container-table');
+
+const headerLastTh = document.querySelector('#lastTh');
+const liClearAllContainer = document.querySelector('#clearAll-container');
+const btnEmptyLibrary = document.querySelector('#btn-emptyLibrary');
+
+const form = document.querySelector('form');
+const formH3 = document.querySelector('form h3');
+const formButtons = document.querySelector('#form-buttons');
+const editorButtons = document.querySelector('#book-editor-buttons');
+
+const btnSaveEdit = document.querySelector('#btn-save-edit');
+const btnResetValue = document.querySelector('#btn-reset-value');
+const btnCancelEdit = document.querySelector('#btn-cancel-edit');
+
 const checkLibrary = function(){
     localStorage.setItem('index', '');
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
     if(!bookLibrary) localStorage.setItem('library', JSON.stringify([]));
 };
-checkLibrary();
 
 const bookLabelEditor = function(){
     const liBookLabel = document.querySelector('#book-count-label');
@@ -35,12 +60,6 @@ const bookLabelEditor = function(){
     liBookCompleted.innerText = `Completed: ${completed}`;
 }
 
-const btnMenu = document.querySelector('#menu');
-const btnCloseMenu = document.querySelector('#close-menu');
-const footer = document.querySelector('footer');
-const inputRadioStatus = document.querySelectorAll('input[name="status"]');
-const inputReadingPageContainer = document.querySelector('#reading-page-container');
-
 const checkIfReading = function(e){
     const inputReadingPage = document.querySelector('#reading-page');
     if(e.target.value == 'Reading'){
@@ -58,17 +77,6 @@ const hideReadingPageContainer = function(){
     }
 };
 
-inputRadioStatus.forEach(function(input){
-    input.addEventListener('change', checkIfReading);
-});
-
-const btnNewBook = document.querySelector('#btn-newBook');
-const btnReset = document.querySelector('#btn-reset');
-const btnCancel = document.querySelector('#btn-close');
-const divContainerInfo = document.querySelector('#container-info');
-const divContainerForm = document.querySelector('#container-form');
-const divTable = document.querySelector('#container-table');
-
 const displayNewBookForm = function(){
     if(footer.classList.contains('hidden')){
         closeMenu();
@@ -84,14 +92,6 @@ const hideNewBookForm = function(){
     divTable.classList.remove('hidden');
 };
 
-btnNewBook.addEventListener('click', displayNewBookForm);
-btnReset.addEventListener('click', hideReadingPageContainer);
-btnCancel.addEventListener('click', hideNewBookForm);
-
-const headerLastTh = document.querySelector('#lastTh');
-const liClearAllContainer = document.querySelector('#clearAll-container');
-const btnEmptyLibrary = document.querySelector('#btn-emptyLibrary');
-
 const toggleClearAllBtnVisibility = function() {
     liClearAllContainer.classList.remove('hidden')
     setTimeout(() => liClearAllContainer.classList.add('hidden'), 3000);
@@ -105,9 +105,6 @@ const clearAllBooks = function(){
         displayBlocker();
     }
 };
-
-headerLastTh.addEventListener('click', toggleClearAllBtnVisibility);
-btnEmptyLibrary.addEventListener('click', clearAllBooks);
 
 const book = {
     edit: function() {
@@ -185,8 +182,6 @@ const submitHandler = function(event){
     updateTable();
 };
 
-document.addEventListener('submit', submitHandler);
-
 const setValue = function(index){
     //change the value of index if the function parameter recieved an event argument
     if(typeof index != "number"){ index = localStorage.getItem('index'); }
@@ -213,11 +208,6 @@ const setValue = function(index){
         readingPage.value = book.status.replace( /^\D+/g, '');
     }
 };
-
-const form = document.querySelector('form');
-const formH3 = document.querySelector('form h3');
-const formButtons = document.querySelector('#form-buttons');
-const editorButtons = document.querySelector('#book-editor-buttons');
 
 const toggleDisplay = function(){
     divContainerForm.classList.toggle('hidden');
@@ -261,15 +251,6 @@ const editBook = function(){
     changeEditorIntoForm();
     updateTable();
 }
-
-const btnSaveEdit = document.querySelector('#btn-save-edit');
-btnSaveEdit.addEventListener('click', editBook);
-const btnResetValue = document.querySelector('#btn-reset-value');
-btnResetValue.addEventListener('click', setValue);
-const btnCancelEdit = document.querySelector('#btn-cancel-edit');
-btnCancelEdit.addEventListener('click', changeEditorIntoForm);
-
-//should I group all the addEventListener and clickable node/btn down below?
 
 const updateTable = function(){
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
@@ -327,7 +308,6 @@ const updateTable = function(){
     }
     bookLabelEditor();
 };
-updateTable();
 
 const displayBlocker = function(){
     let bookLibrary = JSON.parse(localStorage.getItem('library'));
@@ -347,7 +327,6 @@ const displayBlocker = function(){
         }
     }
 };
-displayBlocker();
 
 const displayMenu = function(){
     if(divContainerInfo.classList.contains('hidden')){
@@ -364,6 +343,26 @@ const closeMenu = function(){
     divContainerInfo.removeAttribute('style');
     footer.classList.remove('hidden');
 }
+
+checkLibrary();
+updateTable();
+displayBlocker();
+
+inputRadioStatus.forEach(function(input){
+    input.addEventListener('change', checkIfReading);
+});
+btnNewBook.addEventListener('click', displayNewBookForm);
+btnReset.addEventListener('click', hideReadingPageContainer);
+btnCancel.addEventListener('click', hideNewBookForm);
+
+document.addEventListener('submit', submitHandler);
+
+headerLastTh.addEventListener('click', toggleClearAllBtnVisibility);
+btnEmptyLibrary.addEventListener('click', clearAllBooks);
+
+btnSaveEdit.addEventListener('click', editBook);
+btnResetValue.addEventListener('click', setValue);
+btnCancelEdit.addEventListener('click', changeEditorIntoForm);
 
 btnMenu.addEventListener('click', displayMenu);
 btnCloseMenu.addEventListener('click', closeMenu);
