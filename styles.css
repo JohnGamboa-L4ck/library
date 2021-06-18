@@ -24,6 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-width: 280px;
 }
 
 .hidden {
@@ -43,7 +44,32 @@ body {
 
 #container-title h1 {
     font-size: 2.5rem;
-    letter-spacing: .4rem;
+    color: var(--dark);
+}
+
+#menu {
+    display: none;
+    float: right;
+    margin-top: .5rem;
+    background-color: var(--transparent);
+}
+
+#close-menu {
+    display: none;
+    position: absolute;
+    right: .5rem;
+    top: 1rem;
+}
+
+#menu:hover, #menu:focus-visible {
+    box-shadow: 0 0 3px 2px var(--primary);
+    text-shadow: var(--primary) 1px 0 4px;
+}
+
+#close-menu:hover, #close-menu:focus-visible {
+    box-shadow: 0 0 3px 3px var(--dark);
+    background-color: var(--red);
+    color: var(--light);
 }
 
 #container-info ul {
@@ -213,13 +239,14 @@ th:hover {
     font-weight: bolder;
 }
 
-.tr-book:hover {
+.tr-book:hover, .tr-book:focus-visible {
     background-color: white;
+    outline: none;
+    box-shadow: 0 0 3px 2px var(--primary);
 }
 
 .tr-book:hover td {
     text-decoration: underline;
-    height: 2.5rem;
 }
 
 td {
@@ -290,4 +317,128 @@ footer p a:hover, footer p a:focus {
     box-shadow: 0 0 3px 2px var(--primary);
     padding: 0 .5rem;
     transition: .25s;
+}
+
+@media only screen and (max-width: 800px) {
+    #container-table {
+        padding-top: .5rem;
+    }
+    table {
+        background-color: var(--transparent);
+    }
+    thead {
+        display: none;
+    }
+    tbody {
+        display: flex;
+        flex-direction: column;  
+    }
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin: .5rem .25rem;
+        border: 1px solid var(--tertiary);
+        border-radius: 4px;
+        padding: .5rem;
+    }
+    tbody tr td {
+        border: none;
+        text-align: right!important;
+        opacity: .85;
+    }
+    tbody tr td:first-of-type {
+        font-weight: bold;
+    }
+    .tr-book:hover td{
+        height: auto;
+        text-decoration: none;
+        border-bottom: 1px solid var(--light);
+        opacity: 1;
+    }
+    tbody tr td:first-of-type::before{
+        content: 'Title: ';
+        position: relative;
+        float: left;
+        font-weight: normal;
+    }
+    .author::before{
+        content: 'Author: ';
+        position: relative;
+        float: left;
+    }
+    .pages::before {
+        content: 'Pages: ';
+        position: relative;
+        float: left;
+    }
+    .status::before {
+        content: 'Status: ';
+        position: relative;
+        float: left;
+    }
+    .manage::before {
+        content: 'manage: ';
+        position: relative;
+        float: left;
+    }
+
+    #container-title h1 {
+        display: inline-block;
+        font-size: 2rem;
+        letter-spacing: .2rem;
+    }
+
+    #menu {
+        display: inherit;
+    }
+
+    #close-menu {
+        display: block;
+    }
+
+    #container-info {
+        display: none;
+        background-color: var(--primary);
+        height: 100%;
+        width: 100%;
+        position: absolute!important;
+        flex-direction: column;
+        justify-content: center;
+    }
+    #container-info ul{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center;
+    }
+
+    #clearAll-container {
+        display: flex!important;
+    }
+    footer p {
+        font-size: .9rem;
+    }
+    footer p a:hover, footer p a:focus {
+        letter-spacing: .1rem;
+        padding: .1rem;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #form-buttons, #book-editor-buttons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #form-buttons button, #book-editor-buttons button {
+        width: 100%;
+        margin: .25rem 0;
+    }
+    footer p {
+        font-size: .7rem;
+    }
+    footer p a:hover, footer p a:focus {
+        letter-spacing: .1rem;
+        padding: 0;
+    }
 }

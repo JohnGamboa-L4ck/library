@@ -35,13 +35,16 @@ const bookLabelEditor = function(){
     liBookCompleted.innerText = `Completed: ${completed}`;
 }
 
+const btnMenu = document.querySelector('#menu');
+const btnCloseMenu = document.querySelector('#close-menu');
+const footer = document.querySelector('footer');
 const inputRadioStatus = document.querySelectorAll('input[name="status"]');
 const inputReadingPageContainer = document.querySelector('#reading-page-container');
 
 const checkIfReading = function(e){
     const inputReadingPage = document.querySelector('#reading-page');
     if(e.target.value == 'Reading'){
-        inputReadingPageContainer.removeAttribute('class');//changed 21:33 june 17
+        inputReadingPageContainer.removeAttribute('class');
         inputReadingPage.setAttribute('required', 'true') } 
     else { 
         inputReadingPageContainer.classList.add('hidden'); 
@@ -67,6 +70,9 @@ const divContainerForm = document.querySelector('#container-form');
 const divTable = document.querySelector('#container-table');
 
 const displayNewBookForm = function(){
+    if(footer.classList.contains('hidden')){
+        closeMenu();
+    }
     divContainerInfo.classList.add('hidden');
     divContainerForm.classList.remove('hidden');
     divTable.classList.add('hidden');
@@ -95,9 +101,9 @@ const clearAllBooks = function(){
     const confirmClear = confirm('Clear all book records? Click "OK" to proceed.');
     if(confirmClear){
         localStorage.setItem('library', JSON.stringify([]));
-        // updateTable(); 
-        displayBlocker(); }
-    else{ return; }   
+        closeMenu();
+        displayBlocker();
+    }
 };
 
 headerLastTh.addEventListener('click', toggleClearAllBtnVisibility);
@@ -227,7 +233,6 @@ const changeFormIntoEditor = function(){
 };
 
 const changeEditorIntoForm = function(){
-    // const inputReadingPageContainer = document.querySelector('#reading-page-container');
     form.removeAttribute('style');
     formH3.classList.toggle('hidden');
     formButtons.classList.toggle('hidden');
@@ -279,10 +284,12 @@ const updateTable = function(){
 
         const tr = document.createElement('tr');
         tr.setAttribute('class', 'tr-book');
+        tr.setAttribute('tabindex', '0');
         const tdTitle = document.createElement('td');
         tdTitle.innerText = bookLibrary[index].title;
         const tdAuthor = document.createElement('td');
         tdAuthor.innerText = bookLibrary[index].author;
+        tdAuthor.setAttribute('class', 'author');
         const tdPages = document.createElement('td');
         tdPages.setAttribute('class', 'pages');
         tdPages.innerText = bookLibrary[index].pages;
@@ -334,13 +341,35 @@ const displayBlocker = function(){
         formButtons.setAttribute('style', 'justify-content: space-evenly;');
         divTable.classList.add('hidden'); } 
     else {
-        // divContainerForm.classList.add('hidden');
-        // divContainerInfo.classList.remove('hidden');
         if(btnCancel.classList.contains('hidden')){
             btnCancel.classList.remove('hidden');
             formButtons.removeAttribute('style');
         }
-        // divTable.classList.remove('hidden');
     }
 };
 displayBlocker();
+
+const displayMenu = function(){
+    if(divContainerInfo.classList.contains('hidden')){
+        alert('Error: Form is on display!')
+        return;
+    }
+    divTable.classList.add('hidden');
+    divContainerInfo.setAttribute('style', 'display: flex;');
+    footer.classList.add('hidden');
+}
+
+const closeMenu = function(){
+    divTable.classList.remove('hidden');
+    divContainerInfo.removeAttribute('style');
+    footer.classList.remove('hidden');
+}
+
+btnMenu.addEventListener('click', displayMenu);
+btnCloseMenu.addEventListener('click', closeMenu);
+
+window.onresize = function(e){ 
+    if((window.innerWidth > 800 && footer.classList.contains('hidden'))){
+        location.reload(); 
+    }
+}
